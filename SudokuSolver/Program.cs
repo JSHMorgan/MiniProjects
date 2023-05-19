@@ -17,8 +17,10 @@ public class Program
     public static void Main(string[] args)
     {
         PopulateCells();
-        PrintPossibleCells(board, board[0, 0]);
-        PrintPossibleNumbers(board[0, 0]);
+        PrintBoard(board);
+        Console.WriteLine();
+        CheckWhileLoneFound();
+        PrintBoard(board);
     }
 
     private static void PopulateCells()
@@ -49,6 +51,30 @@ public class Program
             cell.FindCellCompetition(board);
             cell.FindPossibleNumbers();
         }
+    }
+
+    private static void CheckWhileLoneFound()
+    {
+        bool loneFound = true;
+        while (loneFound)
+        {
+            loneFound = false;
+            foreach (var item in board)
+            {
+                if (item.PossibleNumbers.Count != 1)
+                {
+                    continue;
+                }
+                loneFound = true;
+                item.Number = item.PossibleNumbers[0];
+                item.PossibleNumbers.RemoveAt(0);
+                foreach (var cell in item.CellComeptition)
+                {
+                    cell.PossibleNumbers.Remove(item.Number);
+                }
+            }
+        }
+        
     }
 
     private static void PrintBoard(Cell[,] board)
